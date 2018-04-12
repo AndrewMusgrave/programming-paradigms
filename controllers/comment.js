@@ -3,9 +3,10 @@ const Comment = require('../models/comment');
 
 module.exports = {
   createComment(req, res, next) {
-    const {comment, _id} = req.body;
+    const {comment, poster, _id} = req.body;
     const blogComment = new Comment({
-      comment
+      comment,
+      poster
     })
     Promise.all([
       blogComment.save(),

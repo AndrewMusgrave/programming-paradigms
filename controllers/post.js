@@ -2,8 +2,8 @@ const Post = require('../models/post');
 
 module.exports = {
   getComments(req, res, next) {
-    const {_id} = req.params;
-    Post.findById(_id)
+    const {identifier} = req.params;
+    Post.findOne({identifier})
       .populate(['comments'])
       .then(response => {
         response
@@ -19,12 +19,11 @@ module.exports = {
   },
 
   createPost(req, res, next) {
-    const {title, identifier} = req.body;
+    const {identifier} = req.body;
     Post.findOne({identifier})
       .then(post => {
         if (!post) {
           const post = new Post({
-            title,
             identifier
           })
           post.save();
