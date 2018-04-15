@@ -11,5 +11,6 @@ module.exports = (app) => {
   /** SMS notification */
   app.post('/api/send-message', PhoneNumberController.sendMessage);
   app.post('/api/phone-number', PhoneNumberController.addPhoneNumber);
-  app.delete('/api/phone-number', PhoneNumberController.deletePhoneNumber)
+  app.delete('/api/phone-number', PhoneNumberController.deletePhoneNumber);
+  app.post('/api/phone-number', PhoneNumberController.deletePhoneNumber);
 }

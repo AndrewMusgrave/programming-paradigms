@@ -42,6 +42,7 @@ module.exports = {
     const cleanPhoneNumber = phoneNumber.replace(/\D/g, '')
     PhoneNumber.findOneAndRemove({phoneNumber})
       .then(response => {
+        console.log(response);
         sendTextMessage(phoneNumber, {message: 'This phone number has been removed from the notification list'})
         res.send(response);
       })
