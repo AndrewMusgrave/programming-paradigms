@@ -1,6 +1,6 @@
 const PhoneNumber = require('../models/phone_number');
-const sendTextMessage = require('../services/twilio').sendTextMessage || process.env.sendTextMessage;
-const sendersPhoneNumber = require('../config/config').sendersPhoneNumber || process.env.sendersPhoneNumber;
+const sendTextMessage = process.env.sendTextMessage || require('../services/twilio').sendTextMessage;
+const sendersPhoneNumber = process.env.sendersPhoneNumber || require('../config/config').sendersPhoneNumber;
 
 module.exports = {
   sendMessage(req, res, next) {

@@ -1,8 +1,8 @@
 const twilio = require('twilio');
 
-const accountSid = require('../config/config').accountSid  || process.env.accountSid;
-const authToken = require('../config/config').authToken  || process.env.authToken;
-const twilioPhoneNumber = require('../config/config').twilioPhoneNumber || process.env.twilioPhoneNumber;
+const accountSid = process.env.accountSid || require('../config/config').accountSid;
+const authToken = process.env.authToken || require('../config/config').authToken;
+const twilioPhoneNumber = process.env.twilioPhoneNumber || require('../config/config').twilioPhoneNumber;
 
 const client = new twilio(accountSid, authToken);
 
