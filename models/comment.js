@@ -3,7 +3,9 @@ const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
   comment: String,
-  poster: String,
+  name: String,
+}, {
+  timestamps: true
 });
 
 const Comment = mongoose.model('comment', CommentSchema);

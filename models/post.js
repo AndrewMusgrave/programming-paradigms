@@ -7,6 +7,8 @@ const PostSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'comment'
   }]
+}, {
+  timestamps: true
 });
 
 PostSchema.virtual('postCount').get(function() {
