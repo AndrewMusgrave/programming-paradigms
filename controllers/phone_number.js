@@ -38,6 +38,7 @@ module.exports = {
   },
 
   deletePhoneNumber(req, res, next) {
+    console.log(req);
     const {phonenumber: phoneNumber = ''} = req.headers;
     const cleanPhoneNumber = phoneNumber.replace(/\D/g, '')
     PhoneNumber.findOneAndRemove({phoneNumber})
