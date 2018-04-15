@@ -7,7 +7,7 @@ const twilioPhoneNumber = process.env.twilioPhoneNumber || require('../config/co
 const client = new twilio(accountSid, authToken);
 
 exports.sendTextMessage = (to, {title, message}) => {
-  const body = `${title} - ${message}`;
+  const body = `${title ? title + ' - ' : ''}${message}`;
   client.messages.create({
     body,
     to,

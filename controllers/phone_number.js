@@ -38,7 +38,6 @@ module.exports = {
   },
 
   deletePhoneNumber(req, res, next) {
-    console.log(req);
     const {phonenumber: phoneNumber = ''} = req.headers;
     const cleanPhoneNumber = phoneNumber.replace(/\D/g, '')
     PhoneNumber.findOneAndRemove({phoneNumber})
@@ -51,5 +50,11 @@ module.exports = {
         sendTextMessage(sendersPhoneNumber, {title: 'Error', message: `Removing ${phoneNumber}`});
         sendTextMessage(phoneNumber, {message: 'An error has occured trying to remove your phone number. The owner has been notified and will remove it manually'});
       });
+  },
+
+  receiveTextMessage(req, res, next) {
+    const {Body = '', From} = req.body;
+    sendTextMessage(sendersPhoneNumber, {title: From, message: Body});
+    next();
   }
 }

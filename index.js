@@ -12,7 +12,10 @@ mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/blogcomments')
 
 app.use(morgan('dev'));
 app.use(cors());
-app.use(bodyParser.json({ type: '*/*' }));
+// app.use(bodyParser.json({ type: '*/*' }));
+// app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 router(app);
 
 const port = process.env.PORT || 3090;
