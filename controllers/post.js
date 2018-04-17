@@ -5,10 +5,13 @@ module.exports = {
     const {identifier} = req.params;
     Post.findOne({identifier})
       .populate(['comments'])
-      .then(response => {
-        response
-          ? res.send(response)
-          : res.send([])
+      .then((response) => {
+        if (response) {
+          response && response.comments.reverse();
+          res.send(response);
+        } else {
+          res.send({comments: []});
+        }
       })
       .catch(error => {
         console.log(
