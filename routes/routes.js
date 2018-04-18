@@ -15,5 +15,5 @@ module.exports = (app) => {
   app.post('/api/receive-message-hook', PhoneNumberController.receiveTextMessage);
 
   /** SMS errors */
-  app.post('/api/receive-message-hook', PhoneNumberController.onErrorHook);
+  app.post('/api/receive-error-hook', PhoneNumberController.onErrorHook);
 }
