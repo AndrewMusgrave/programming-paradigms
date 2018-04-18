@@ -61,5 +61,8 @@ module.exports = {
 
   onErrorHook(req, res, next) {
     console.log(req.body);
+    res.send(`
+      <Response></Response>
+    `);
   }
 }
