@@ -54,10 +54,12 @@ module.exports = {
   receiveTextMessage(req, res, next) {
     const {Body = '', From} = req.body;
     sendTextMessage(sendersPhoneNumber, {title: From, message: Body});
-    next();
+    res.send(`
+      <Response></Response>
+    `);
   },
 
   onErrorHook(req, res, next) {
-    console.log(req);
+    console.log(req.body);
   }
 }
