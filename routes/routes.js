@@ -13,4 +13,7 @@ module.exports = (app) => {
   app.post('/api/phone-number', PhoneNumberController.addPhoneNumber);
   app.delete('/api/phone-number', PhoneNumberController.deletePhoneNumber);
   app.post('/api/receive-message-hook', PhoneNumberController.receiveTextMessage);
+
+  /** SMS errors */
+  app.post('/api/receive-message-hook', PhoneNumberController.onErrorHook);
 }

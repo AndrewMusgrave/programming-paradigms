@@ -56,5 +56,9 @@ module.exports = {
     const {Body = '', From} = req.body;
     sendTextMessage(sendersPhoneNumber, {title: From, message: Body});
     next();
+  },
+
+  onErrorHook(req, res, next) {
+    console.log(res);
   }
 }
