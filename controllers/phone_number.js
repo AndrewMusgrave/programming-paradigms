@@ -1,5 +1,6 @@
 const PhoneNumber = require('../models/phone_number');
 const sendTextMessage = process.env.sendTextMessage || require('../services/twilio').sendTextMessage;
+const sendMessages = require('../services/twilio').sendMessages;
 const sendersPhoneNumber = process.env.sendersPhoneNumber || require('../config/config').sendersPhoneNumber;
 
 module.exports = {
@@ -53,6 +54,9 @@ module.exports = {
 
   receiveTextMessage(req, res, next) {
     const {Body = '', From} = req.body;
+    if (From == sendersPhoneNumber && body.includes('MESSAGE')) {
+      sendMessages(Body);
+    }
     sendTextMessage(sendersPhoneNumber, {title: From, message: Body});
     res.send(`
       <Response></Response>
