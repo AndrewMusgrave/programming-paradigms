@@ -8,7 +8,8 @@ const router = require('./routes/routes');
 const path = require('path')
 
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/blogcomments')
+// mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/blogcomments')
+mongoose.connect('mongodb://localhost/blogcomments');
 
 app.use(morgan('dev'));
 app.use(cors());
