@@ -9,62 +9,10 @@ const sendersPhoneNumber = process.env.sendersPhoneNumber || require('../config/
 
 const client = new twilio(accountSid, authToken);
 
-// const sendTextMessage = (to, {title, message}) => {
-//   const body = `${title ? title + ' - ' : ''}${message}`;
-//   client.messages.create({
-//     body,
-//     to,
-//     from: twilioPhoneNumber,
-//   })
-//   .catch(err => {
-//     const {code} = err;
-//     if (code == 21610) {
-//       deletePhoneNumber(to);
-//     }
-//   })
-// }
-
-// function deletePhoneNumber(phoneNumber) {
-//   const cleanPhoneNumber = phoneNumber.replace(/\D/g, '')
-//   PhoneNumber.findOneAndRemove({phoneNumber})
-//     .then(response => {
-//       client.messages.create({
-//         body: `Removed: ${phoneNumber}`,
-//         to: sendersPhoneNumber,
-//         from: twilioPhoneNumber,
-//       })
-//       res.send(response);
-//     })
-//     .catch(error => {
-//       client.messages.create({
-//         body: `Error - Removing ${phoneNumber}: ${error}`,
-//         to: sendersPhoneNumber,
-//         from: twilioPhoneNumber,
-//       })
-//     });
-// }
-
-// exports.sendMessages = (body) => {
-//   PhoneNumber.find()
-//     .then(response => {
-//       response.map(({phoneNumber}) => {
-//         client.messages.create({
-//           body,
-//           to: phoneNumber,
-//           from: twilioPhoneNumber,
-//         })
-//       })
-//     })
-//     .catch(error => {
-//       client.messages.create({
-//         body: `Error - Sending message to ${phoneNumber}: ${error}`,
-//         to: sendersPhoneNumber,
-//         from: twilioPhoneNumber,
-//       })
-//     });
-// }
-
-// exports.sendTextMessage = sendTextMessage;
+const ADD = 'ADD';
+const DELETE = 'DELETE';
+const MESSAGE = 'MESSAGE';
+const MESSAGE_ALL = 'MESSAGE_ALL';
 
 function sendTextMessage(to, {title, message}) {
     const body = `${title ? title + ' - ' : ''}${message}`;
@@ -86,7 +34,7 @@ async function sendTextMessages(title, message) {
       returnMessage = {success: 'Messages send'};
     })
     .catch(error => {
-      sendTextMessage(sendersPhoneNumber, {title: 'Error', message: error})
+      sendTextMessage(sendersPhoneNumber, {title: 'Error', message: error.Payload})
       returnMessage = {error: error};
     });
 
@@ -124,16 +72,38 @@ function onTextMessageError(phoneNumber, error) {
 }
 
 function onErrorHook(error) {
-  sendTextMessage(sendersPhoneNumber, {title: 'Error', message: error});
+  sendTextMessage(sendersPhoneNumber, {title: 'Error', message: error.Payload});
 }
 
 function onTextHook(Body, From) {
-  /**
-   * set up add
-   * set up remove
-   * set up message
-   * set up message all
-   */
+  const authPhoneNumber = `+1${sendersPhoneNumber}`;
+  if (From !== authPhoneNumber) {
+    return;
+  }
+
+  const {command, phoneNumber, message} = parseTextMessageBody(Body);
+  switch(command) {
+    case ADD:
+      if (phoneNumber) {
+        addPhoneNumber(phoneNumber);
+      }
+      break;
+    case DELETE:
+      if (phoneNumber) {
+        deletePhoneNumber(phoneNumber);
+      }
+      break;
+    case MESSAGE:
+      if (phoneNumber) {
+        sendTextMessage(phoneNumber, {message});
+      }
+      break;
+    case MESSAGE_ALL:
+      sendTextMessages('', message);
+      break;
+    default:
+      break;
+  }
   sendTextMessage(sendersPhoneNumber, {title: From, message: Body});
 }
 
@@ -176,6 +146,26 @@ async function addPhoneNumber(phoneNumber) {
     });
 
   return message;
+}
+
+function parseTextMessageBody(body) {
+  const seperateIndex = body.indexOf(':');
+  const commandChunk = body.slice(0, seperateIndex);
+  const commandParsed = commandChunk.split('-');
+
+  const message = body.slice(seperateIndex + 2);
+  let command = '';
+  let phoneNumber = null;
+  if (commandParsed.length === 2) {
+    command = commandParsed[0];
+    phoneNumber = commandParsed[1];
+  }
+
+  return {
+    command,
+    phoneNumber,
+    message,
+  }
 }
 
 exports.sendTextMessage = sendTextMessage;
