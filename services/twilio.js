@@ -159,6 +159,8 @@ function parseTextMessageBody(body) {
   if (commandParsed.length === 2) {
     command = commandParsed[0];
     phoneNumber = commandParsed[1];
+  } else {
+    command = commandParsed;
   }
 
   return {
